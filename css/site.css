@@ -206,6 +206,22 @@ section { padding-block: 3.5rem; }
   text-wrap: balance;
 }
 
+.hero-cta { margin: 0.4rem 0 0; display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; align-items: baseline; color: var(--bone-dim); font-style: italic; }
+.hero-cta a {
+  font-family: var(--font-ind);
+  font-weight: 900;
+  font-style: normal;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--soot);
+  background: var(--temper-ink);
+  text-decoration: none;
+  padding: 0.6rem 0.9rem 0.5rem;
+  border-radius: 2px;
+}
+.hero-cta a:hover { background: var(--bone); }
+
 .lehr-figure { margin: 1.5rem 0 0; display: grid; gap: 0.75rem; }
 .lehr-button {
   all: unset;
@@ -324,6 +340,47 @@ section { padding-block: 3.5rem; }
   transform: rotate(-6deg);
   opacity: 0.85;
 }
+
+/* the keeper's log */
+.log {
+  padding-block: 3rem 0;
+  display: grid;
+  gap: 1.2rem;
+  max-width: 44rem;
+}
+.log-head { display: grid; gap: 0.3rem; }
+.log-head h3 { font-size: var(--step-2); text-transform: uppercase; letter-spacing: 0.03em; color: var(--bone); }
+.log-head p { margin: 0; color: var(--bone-dim); font-style: italic; }
+.log-entries { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-left: 1px solid var(--rule); }
+.log-entries li { position: relative; padding: 0.2rem 0 1.3rem 1.2rem; display: grid; gap: 0.2rem; min-width: 0; }
+.log-entries li::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 0.55rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--soot);
+  border: 1.5px solid var(--temper-ink);
+}
+.log-entries li:first-child::before { background: var(--temper-ink); box-shadow: 0 0 0.6rem var(--temper); }
+.log-day {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.8rem;
+  align-items: baseline;
+  font-family: var(--font-ind);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+}
+.log-day span { color: var(--temper-ink); font-size: 1rem; }
+.log-day time { color: var(--bone-dim); }
+.log-text { margin: 0; font-size: 1.1rem; line-height: 1.55; max-width: var(--measure); }
 
 /* ---------- kilns ---------- */
 
@@ -598,6 +655,7 @@ section { padding-block: 3.5rem; }
 }
 .foot-lehr { width: 4rem; color: var(--bone-dim); opacity: 0.7; }
 .foot-line { margin: 0; font-style: italic; color: var(--bone-dim); }
+.foot-solo { margin: 0; font-style: italic; color: var(--bone); }
 .foot-small { margin: 0; font-family: var(--font-ind); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bone-dim); font-variant-numeric: tabular-nums; }
 .boltzmann {
   all: unset;

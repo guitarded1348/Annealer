@@ -32,7 +32,9 @@
     }).join("");
   })();
   $("#hero-line").textContent = D.heroLine;
+  $("#kilns-lede").textContent = D.kilnsLede;
   $("#foot-line").textContent = D.footer;
+  $("#foot-solo").textContent = D.credits;
   $("#ambient").textContent = AMBIENT;
 
   /* ---------- the page cools as you scroll ---------- */
@@ -127,6 +129,20 @@
     return '<p' + (l.ink ? ' class="ink"' : "") + ">" + esc(l.text) + "</p>";
   }).join("") + '<p class="signoff">' + esc(D.workshop.signoff) + "</p>";
 
+  /* ---------- the keeper's log ---------- */
+
+  function dayOf(iso) { return Math.max(1, Math.floor((Date.parse(iso) - Date.parse(D.site.litOn)) / 86400000) + 1); }
+  (function keepersLog() {
+    var entries = D.log.entries.slice().sort(function (a, b) { return Date.parse(b.date) - Date.parse(a.date); });
+    var shown = entries.slice(0, D.log.show || 6);
+    $("#log-entries").innerHTML = shown.map(function (e) {
+      return '<li><p class="log-day"><span>Day ' + dayOf(e.date) + '</span><time datetime="' + esc(e.date) + '">' +
+        dateFmt.format(Date.parse(e.date)) + "</time></p><p class=\"log-text narrator\">" + esc(e.text) + "</p></li>";
+    }).join("");
+    var ago = Math.max(0, Math.floor((now() - Date.parse(D.site.litOn)) / 86400000));
+    $("#days-lit").textContent = ago === 0 ? "Lehr lit today" : "Lehr lit " + ago + (ago === 1 ? " day" : " days") + " ago";
+  })();
+
   /* ---------- the kilns ---------- */
 
   var INTAKE_BASE = 273; // intake numbers start at absolute zero, in kelvin
@@ -197,41 +213,71 @@
   }
 
   var gauges = [];
+  var LIT = Date.parse(D.site.litOn);
+  var DAY = 86400000;
+
+  /*
+    A chamber is in one of four states:
+      open     its release date has passed: intake tags and players
+      dated    sealed with a release date: cooling gauge and countdown
+      heating  the first chamber with no date yet: gauge climbs slowly from the day the lehr was lit
+      cold     any later chamber with no date: waits its turn at ambient
+  */
   function renderChambers() {
     trackIndex = 0;
     gauges = [];
     var t = now();
+    var undatedSeen = false;
     $("#chambers").innerHTML = D.phases.map(function (phase, i) {
-      var release = Date.parse(phase.releaseDate);
-      var open = t >= release;
+      var example = D.site.showExamples && i === 0;
+      var tracks = example ? D.exampleTracks : phase.tracks;
+      var release = phase.releaseDate ? Date.parse(phase.releaseDate) : null;
+      var state = example || (release !== null && t >= release) ? "open"
+        : release !== null ? "dated"
+        : undatedSeen ? "cold" : "heating";
+      if (release === null && !example) undatedSeen = true;
       var no = ROMAN[i] || String(i + 1);
+      var status = {
+        open: example ? "Example &nbsp;·&nbsp; not real yet" : "Open &nbsp;·&nbsp; since " + (release !== null ? dateFmt.format(release) : ""),
+        dated: "Sealed",
+        heating: "Heating &nbsp;·&nbsp; no date yet",
+        cold: "Cold &nbsp;·&nbsp; not yet loaded",
+      }[state];
       var head =
         '<header class="chamber-head">' +
         '<p class="chamber-no">Chamber ' + no + " &nbsp;·&nbsp; " + phase.chamberTemp + " °C</p>" +
         "<h3>" + esc(phase.name) + "</h3>" +
-        '<p class="chamber-status">' + (open ? "Open &nbsp;·&nbsp; since " + dateFmt.format(release) : "Sealed") + "</p>" +
+        '<p class="chamber-status">' + status + "</p>" +
         '<p class="chamber-summary narrator">' + esc(phase.summary) + "</p>" +
         "</header>";
       var body;
-      if (open) {
-        body = '<ul class="tags">' + phase.tracks.map(function (tr) { return tagHTML(tr, phase, no); }).join("") + "</ul>";
+      if (state === "open") {
+        body = '<ul class="tags">' + tracks.map(function (tr) { return tagHTML(tr, phase, no); }).join("") + "</ul>";
       } else {
-        trackIndex += phase.tracks.length; // keep intake numbers stable when chambers open
-        var count = phase.tracks.length;
+        trackIndex += tracks.length; // keep intake numbers stable when chambers open
+        var count = tracks.length;
+        var when = {
+          dated: release !== null ? "Opens " + dateFmt.format(release) + ", " + timeFmt.format(release) : "",
+          heating: "No date yet. It opens when it's ready, and not before.",
+          cold: "Waits for the chamber before it.",
+        }[state];
         body =
           '<div class="gauge" data-gauge="' + i + '">' + gaugeSVG(phase) +
           '<p class="gauge-temp"><span data-temp>—</span><small>°C</small></p>' +
-          '<ul class="countdown" aria-hidden="true">' +
-          "<li><b data-d>0</b><span>days</span></li><li><b data-h>0</b><span>hrs</span></li>" +
-          "<li><b data-m>0</b><span>min</span></li><li><b data-s>0</b><span>sec</span></li></ul>" +
-          '<p class="gauge-date">Opens ' + dateFmt.format(release) + ", " + timeFmt.format(release) +
-          '<span data-wait></span></p>' +
+          (state === "dated"
+            ? '<ul class="countdown" aria-hidden="true">' +
+              "<li><b data-d>0</b><span>days</span></li><li><b data-h>0</b><span>hrs</span></li>" +
+              "<li><b data-m>0</b><span>min</span></li><li><b data-s>0</b><span>sec</span></li></ul>"
+            : "") +
+          '<p class="gauge-date">' + when + '<span data-wait></span></p>' +
           "</div>" +
-          '<p class="sealed-count">' + count + (count === 1 ? " object" : " objects") + " inside &nbsp;·&nbsp; contents withheld</p>";
-        gauges.push({ i: i, phase: phase, release: release, sealed: Date.parse(phase.sealedOn) });
+          '<p class="sealed-count">' +
+          (count ? count + (count === 1 ? " object" : " objects") + " inside &nbsp;·&nbsp; contents withheld" : "Objects still arriving") +
+          "</p>";
+        gauges.push({ i: i, phase: phase, state: state, release: release, sealed: phase.sealedOn ? Date.parse(phase.sealedOn) : null });
       }
       return (
-        '<article class="chamber ' + (open ? "is-open" : "is-sealed") + '" data-phase="' + phase.id + '" id="kiln-' + phase.id + '" aria-labelledby="kiln-' + phase.id + '-name">' +
+        '<article class="chamber is-' + (state === "open" ? "open" : "sealed") + '" data-phase="' + phase.id + '" data-state="' + state + '" id="kiln-' + phase.id + '" aria-labelledby="kiln-' + phase.id + '-name">' +
         head.replace("<h3>", '<h3 id="kiln-' + phase.id + '-name">') + body +
         '<p class="gauge-note narrator">“' + esc(phase.note) + "”</p>" +
         "</article>"
@@ -248,20 +294,30 @@
     gauges.forEach(function (g) {
       var el = document.querySelector('[data-gauge="' + g.i + '"]');
       if (!el) return;
-      var left = g.release - t;
-      if (left <= 0) { reload = true; return; }
-      var span = Math.max(1, g.release - g.sealed);
-      var frac = Math.min(1, Math.max(0, left / span));
-      var temp = AMBIENT + frac * (g.phase.chamberTemp - AMBIENT);
+      var temp, label;
+      if (g.state === "dated") {
+        var left = g.release - t;
+        if (left <= 0) { reload = true; return; }
+        var frac = g.sealed === null ? 1 : Math.min(1, Math.max(0, left / Math.max(1, g.release - g.sealed)));
+        temp = AMBIENT + frac * (g.phase.chamberTemp - AMBIENT);
+        var s = Math.floor(left / 1000);
+        $("[data-d]", el).textContent = Math.floor(s / 86400);
+        $("[data-h]", el).textContent = pad(Math.floor(s / 3600) % 24);
+        $("[data-m]", el).textContent = pad(Math.floor(s / 60) % 60);
+        $("[data-s]", el).textContent = pad(s % 60);
+        $("[data-wait]", el).textContent = g.sealed !== null && t < g.sealed ? ". Waits for the chamber before it." : "";
+        label = "cooling. Opens in " + Math.ceil(s / 86400) + " days.";
+      } else if (g.state === "heating") {
+        // creeps toward full heat the longer the lehr has been lit
+        temp = AMBIENT + (g.phase.chamberTemp - AMBIENT) * (1 - Math.exp(-(t - LIT) / DAY / 90));
+        label = "heating. No release date yet.";
+      } else {
+        temp = AMBIENT;
+        label = "cold. Not yet loaded.";
+      }
       $("[data-temp]", el).textContent = Math.round(temp);
       $(".needle", el).style.transform = "rotate(" + ((temp / 600) * 180 - 90) + "deg)";
-      var s = Math.floor(left / 1000);
-      $("[data-d]", el).textContent = Math.floor(s / 86400);
-      $("[data-h]", el).textContent = pad(Math.floor(s / 3600) % 24);
-      $("[data-m]", el).textContent = pad(Math.floor(s / 60) % 60);
-      $("[data-s]", el).textContent = pad(s % 60);
-      $("[data-wait]", el).textContent = t < g.sealed ? ". Waits for the chamber before it." : "";
-      $("svg", el).setAttribute("aria-label", "Chamber at " + Math.round(temp) + " degrees Celsius, cooling. Opens in " + Math.ceil(s / 86400) + " days.");
+      $("svg", el).setAttribute("aria-label", "Chamber at " + Math.round(temp) + " degrees Celsius, " + label);
     });
     if (reload) renderChambers();
   }
@@ -399,17 +455,26 @@
     if (name.toLowerCase().replace(/^the\s+/, "") === "annealer") { reply.textContent = C.selfName; nameIn.value = ""; nameIn.focus(); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { mailIn.setAttribute("aria-invalid", "true"); reply.textContent = C.badEmail; mailIn.focus(); return; }
 
-    retrigger($("#ledger-submit"), "rung");
-    try { localStorage.setItem("annealer.name", name); } catch (err) {}
+    if (form.elements["bot-field"] && form.elements["bot-field"].value) return; // a bot filled the hidden field
 
-    // Netlify Forms: add data-netlify="true" and name="counter" to the <form> to collect for real.
-    if (form.dataset.netlify === "true") {
-      var body = new URLSearchParams({ "form-name": form.getAttribute("name") || "counter", name: name, email: mail });
-      fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() })
-        .catch(function () { reply.textContent = "The bell didn't ring. Try again in a moment."; });
+    retrigger($("#ledger-submit"), "rung");
+    var submit = $("#ledger-submit");
+    function received() {
+      try { localStorage.setItem("annealer.name", name); } catch (err) {}
+      reply.textContent = C.replies[Math.floor(Math.random() * C.replies.length)];
+      form.reset();
     }
-    reply.textContent = C.thanks;
-    form.reset();
+
+    // On Netlify the form posts to Netlify Forms (see data-netlify on the <form>).
+    // Inside a framed preview there is nowhere to post, so it only answers.
+    var live = form.dataset.netlify === "true" && window.self === window.top && location.protocol !== "file:";
+    if (!live) { received(); return; }
+    submit.disabled = true;
+    var body = new URLSearchParams({ "form-name": form.getAttribute("name"), name: name, email: mail });
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() })
+      .then(function (res) { if (!res.ok) throw new Error(res.status); received(); })
+      .catch(function () { reply.textContent = C.failed; })
+      .then(function () { submit.disabled = false; });
   });
 
   /* ---------- the tangled note (simulated annealing, for real) ---------- */

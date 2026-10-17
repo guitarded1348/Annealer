@@ -90,9 +90,10 @@
 
   <!-- LANDING -->
   <section class="hero wrap" id="top" aria-labelledby="wordmark">
-    <p class="specimen">Specimen No. 1 &nbsp;·&nbsp; Received hot &nbsp;·&nbsp; Handle with tongs</p>
+    <p class="specimen">Specimen No. 1 &nbsp;·&nbsp; <span id="days-lit">Lehr lit</span> &nbsp;·&nbsp; Handle with tongs</p>
     <h1 id="wordmark" class="wordmark" aria-label="ANNEALER"></h1>
     <p class="hero-line narrator" id="hero-line"></p>
+    <p class="hero-cta"><a href="#counter">Leave your name at the counter</a> <span class="narrator">and I'll write when the first chamber opens.</span></p>
 
     <figure class="lehr-figure">
       <button class="lehr-button" id="lehr" type="button" aria-label="The lehr. Poke it, if you must." aria-describedby="lehr-says">
@@ -240,6 +241,13 @@
         <figcaption id="schedule-cap"><span class="fig-no">Fig. 2</span> An annealing schedule for soda-lime glass, in °C. Also a release schedule.</figcaption>
       </figure>
     </div>
+    <section class="log" id="log" aria-labelledby="log-title">
+      <header class="log-head">
+        <h3 id="log-title">The Keeper's Log</h3>
+        <p class="narrator">Kept on the back of an invoice. Most recent first.</p>
+      </header>
+      <ol class="log-entries" id="log-entries"></ol>
+    </section>
     <svg class="peeker" viewBox="0 0 120 80" aria-hidden="true"><use href="#lehr-mini"/></svg>
   </section>
 
@@ -248,7 +256,7 @@
     <header class="section-head">
       <p class="eyebrow">Section III &nbsp;·&nbsp; The lehr has three chambers</p>
       <h2 id="kilns-title">The Kilns</h2>
-      <p class="section-lede narrator">Each chamber opens when it has cooled enough. Not before. I've tried before.</p>
+      <p class="section-lede narrator" id="kilns-lede"></p>
     </header>
     <div class="chambers" id="chambers"></div>
   </section>
@@ -260,7 +268,10 @@
       <h2 id="counter-title">Leave your name at the counter</h2>
     </header>
     <div class="counter-grid">
-      <form class="ledger" id="ledger" novalidate>
+      <!-- name + data-netlify let Netlify Forms collect entries on deploy. Remove both to keep it front-end only. -->
+      <form class="ledger" id="ledger" name="counter" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="counter">
+        <p class="honeypot" hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
         <p class="ledger-head">Intake Ledger &nbsp;·&nbsp; Correspondence</p>
         <p class="ledger-intro narrator" id="counter-intro"></p>
         <label for="ledger-name">Name</label>
@@ -284,6 +295,7 @@
 <footer class="foot wrap">
   <svg class="foot-lehr" viewBox="0 0 120 80" aria-hidden="true"><use href="#lehr-asleep"/></svg>
   <p class="foot-line narrator" id="foot-line"></p>
+  <p class="foot-solo narrator" id="foot-solo"></p>
   <p class="foot-small">
     ANNEALER &nbsp;·&nbsp; Ambient, <span id="ambient">21</span>&nbsp;°C &nbsp;·&nbsp;
     <button class="boltzmann" id="boltzmann" type="button" aria-label="A constant. Press to see what it's for.">k = 1.380649 × 10<sup>−23</sup> J/K</button>
