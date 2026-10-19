@@ -1,6 +1,9 @@
 # ANNEALER
 
-Identity and release site for ANNEALER, at https://annealermusic.com. Plain HTML, CSS and JS. No build step.
+Identity and release site for ANNEALER, at https://annealermusic.com, plus the iPhone/CarPlay app
+in `ios/` (see `ios/README.md`). Both read the same content file.
+
+The website is plain HTML, CSS and JS; the only build step generates the app's content file.
 
 ## Edit the content
 
@@ -33,8 +36,10 @@ python3 -m http.server 8080
 
 ## Deploy to Netlify
 
-Drag the folder onto app.netlify.com/drop, or connect the repo. `netlify.toml` already sets
-the publish directory to the repo root; there's no build command.
+Connect the repo, or deploy with the Netlify CLI. The build (`node scripts/build.mjs`) copies only
+the website into `dist/` and writes `dist/content.json` for the app, so nothing else in the repo
+(the app, scripts, unreleased test audio) is ever published. For a drag-and-drop deploy, run
+`node scripts/build.mjs` first and drop the `dist` folder.
 
 **Signups are collected with Netlify Forms.** The counter form already carries
 `data-netlify="true"`, so once deployed, names and emails show up under Forms in the Netlify
@@ -57,6 +62,8 @@ js/data.js     all content and dates (edit this)
 js/main.js     behaviour: scroll cooling, kilns, players, counter, easter eggs
 404.html       for things that were never brought in
 netlify.toml   deploy config
+scripts/       build.mjs (Netlify build) and export-content.mjs (data.js → content.json)
+ios/           the iPhone and CarPlay app
 ```
 
 ## For close readers

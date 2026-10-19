@@ -129,6 +129,27 @@ window.ANNEALER = {
     },
   ],
 
+  // App only: "Bring something in." A listener writes down what made them hot today and leaves
+  // it in their own lehr. It cools over `coolHours`, then the Annealer leaves a note on it.
+  // Entries stay on the listener's phone; nobody else ever sees them, including you.
+  intake: {
+    title: "Bring something in",
+    prompt: "What made you hot today? Write it down and leave it in the lehr. Nobody reads these but the lehr.",
+    placeholder: "It started when…",
+    button: "Leave it in the lehr",
+    coolHours: 24,
+    empty: "Nothing on the bench. Lucky you. Or you're lying.",
+    replies: [
+      "Cooled. It looks smaller from here. Most things do.",
+      "Held it overnight. It stopped shaking around four.",
+      "It's not gone. It's annealed. You can hold it now without it holding you.",
+      "There was less in it than you thought. There usually is.",
+      "I've seen worse come in. I've seen worse go out, too.",
+      "It cooled without cracking. That was the whole job.",
+      "Set it on the shelf. You don't have to look at it, but you can.",
+    ],
+  },
+
   // The mailing list ("leave your name at the counter").
   counter: {
     title: "Leave your name at the counter",

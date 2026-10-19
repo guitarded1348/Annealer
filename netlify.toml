@@ -1,6 +1,8 @@
-# Static site: no build step. Netlify serves this folder as-is.
+# Static site. The build copies the website into dist/ and turns js/data.js into
+# content.json for the iOS app. Nothing outside the website (ios/, scripts/) gets published.
 [build]
-  publish = "."
+  publish = "dist"
+  command = "node scripts/build.mjs"
 
 [[headers]]
   for = "/*"
@@ -16,5 +18,10 @@
 
 [[headers]]
   for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/content.json"
   [headers.values]
     Cache-Control = "public, max-age=300"

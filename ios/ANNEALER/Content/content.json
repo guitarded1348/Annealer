@@ -1,0 +1,164 @@
+{
+  "exportedAt": "2026-10-19T15:26:23.280Z",
+  "site": {
+    "name": "ANNEALER",
+    "litOn": "2026-06-01T00:00:00-05:00",
+    "ambient": 21,
+    "showExamples": false,
+    "previewDate": null
+  },
+  "heroLine": "Bring it in hot. I'll cool it slowly. Don't wait up.",
+  "kilnsLede": "Nothing has come out of the lehr yet. Each chamber opens when it has cooled enough. Not before.",
+  "lehrLines": [
+    "It's warm. It's always warm.",
+    "Don't knock on the door. It knocks back.",
+    "It ate a teaspoon once. We don't discuss the teaspoon.",
+    "Shh. It's thinking.",
+    "That isn't breathing. That's the draft. Mostly.",
+    "You're making it glow. Stop that."
+  ],
+  "lehrSeventh": "Seven. It likes you now. I'd consider that bad news.",
+  "workshop": {
+    "title": "The Workshop",
+    "lore": [
+      {
+        "text": "The workshop is at the end of a street that doesn't appear to have an end. You'll find it anyway. Things that run too hot always do."
+      },
+      {
+        "text": "I take in what has been overheated. Kettles. Fuses. A clock that struck thirteen out of spite. People leave them on the step and go. Nobody knocks."
+      },
+      {
+        "text": "There's a lehr in the back. It's a long oven, very old and very patient, and I'd ask you not to stare at its door. It doesn't care for that. Neither do I."
+      },
+      {
+        "text": "I was brought in once, myself.",
+        "ink": true
+      },
+      {
+        "text": "The trick isn't the heat. Anyone can make a thing hot. The trick is holding it there, and then letting it go so slowly it never notices it's being let go."
+      },
+      {
+        "text": "Glass cooled too fast keeps its temper inside. It looks perfectly well. Then one Tuesday, in an empty room, it shatters. Nobody was near it. Nobody ever is."
+      },
+      {
+        "text": "Nobody else works here. I tried an apprentice once. The lehr didn't take to him, and that was the end of the apprentice."
+      },
+      {
+        "text": "I don't repair things. I cool them. The difference is mostly patience, and a little of the other thing."
+      },
+      {
+        "text": "The lehr has never been switched off. Nobody has asked me to.",
+        "ink": true
+      }
+    ],
+    "signoff": "— A."
+  },
+  "log": {
+    "show": 6,
+    "entries": [
+      {
+        "date": "2026-06-01",
+        "text": "Lit the lehr. It took the match like it had been waiting for one."
+      },
+      {
+        "date": "2026-07-18",
+        "text": "Something came in tonight with its teeth showing. I've put it in the first chamber. It's loud in there."
+      },
+      {
+        "date": "2026-09-02",
+        "text": "Wrote nothing today. Held the temperature. That counts."
+      },
+      {
+        "date": "2026-10-09",
+        "text": "Four objects on the bench now. Two of them are arguing. I'm letting them."
+      }
+    ]
+  },
+  "phases": [
+    {
+      "id": "heat",
+      "name": "Heat",
+      "chamberTemp": 565,
+      "sealedOn": null,
+      "releaseDate": null,
+      "summary": "Past the critical point. Everything arrives like this.",
+      "note": "Don't touch the glass. The glass is touching you.",
+      "tracks": []
+    },
+    {
+      "id": "soak",
+      "name": "Soak",
+      "chamberTemp": 548,
+      "sealedOn": null,
+      "releaseDate": null,
+      "summary": "Held there, long enough for the inside to catch up with the outside.",
+      "note": "It isn't stuck. It's holding. You'll know the difference later.",
+      "tracks": []
+    },
+    {
+      "id": "cool",
+      "name": "Slow Cool",
+      "chamberTemp": 514,
+      "sealedOn": null,
+      "releaseDate": null,
+      "summary": "The part nobody has patience for. The part that works.",
+      "note": "Don't open the door to check. Checking is how things crack.",
+      "tracks": []
+    }
+  ],
+  "exampleTracks": [
+    {
+      "title": "Kettle, Boiled Dry",
+      "object": "One enamel kettle, boiled dry. Still screaming at intake.",
+      "condition": "Hot to the eye.",
+      "note": "Took the whistle out. It kept whistling. We've agreed to disagree.",
+      "duration": "3:41",
+      "audio": ""
+    },
+    {
+      "title": "Fusebox",
+      "object": "One fuse box. Three fuses blown, one of them proud of it.",
+      "condition": "Smells of pennies.",
+      "note": "Customer says it just went. Things don't just go.",
+      "duration": "4:12",
+      "audio": ""
+    }
+  ],
+  "intake": {
+    "title": "Bring something in",
+    "prompt": "What made you hot today? Write it down and leave it in the lehr. Nobody reads these but the lehr.",
+    "placeholder": "It started when…",
+    "button": "Leave it in the lehr",
+    "coolHours": 24,
+    "empty": "Nothing on the bench. Lucky you. Or you're lying.",
+    "replies": [
+      "Cooled. It looks smaller from here. Most things do.",
+      "Held it overnight. It stopped shaking around four.",
+      "It's not gone. It's annealed. You can hold it now without it holding you.",
+      "There was less in it than you thought. There usually is.",
+      "I've seen worse come in. I've seen worse go out, too.",
+      "It cooled without cracking. That was the whole job.",
+      "Set it on the shelf. You don't have to look at it, but you can."
+    ]
+  },
+  "counter": {
+    "title": "Leave your name at the counter",
+    "intro": "Nothing has come out of the lehr yet. Leave your name and I'll write when the first chamber opens. Once per chamber, and not otherwise.",
+    "button": "Ring the bell",
+    "replies": [
+      "Noted. I'll write when something comes out of the lehr. Don't wait up.",
+      "Your name's in the ledger. In ink. That was your decision.",
+      "Heard the bell. Didn't come out. I'll write.",
+      "Filed under 'patient.' We'll see.",
+      "Good. Somebody should know when it's done.",
+      "The lehr made a noise when you signed. I'm choosing to take that as approval."
+    ],
+    "returning": "You again, {name}. Your name's still on the ledger.",
+    "selfName": "That's my name. Put it back.",
+    "badEmail": "That address won't take a letter. Check it and ring again.",
+    "noName": "The ledger needs a name. Any name. Most people lie.",
+    "failed": "The bell didn't ring. Try again in a moment."
+  },
+  "footer": "Cooled at 1 °C per minute. Do not rush the glass.",
+  "credits": "All work done on the premises. Nobody else works here."
+}

@@ -1,2 +1,4 @@
 annealer-site.zip
 .netlify/
+/content.json
+dist/
