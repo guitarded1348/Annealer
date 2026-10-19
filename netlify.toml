@@ -11,15 +11,16 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
+# Always revalidate so a deploy shows up on the next visit (the files are tiny).
 [[headers]]
   for = "/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=3600"
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=300"
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/content.json"
