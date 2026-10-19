@@ -1,6 +1,6 @@
 # ANNEALER
 
-Identity and release site for ANNEALER. Plain HTML, CSS and JS. No build step.
+Identity and release site for ANNEALER, at https://annealermusic.com. Plain HTML, CSS and JS. No build step.
 
 ## Edit the content
 
@@ -40,6 +40,13 @@ the publish directory to the repo root; there's no build command.
 `data-netlify="true"`, so once deployed, names and emails show up under Forms in the Netlify
 dashboard (enable form detection there if it's off). Export them as CSV when you send word.
 Remove `name` and `data-netlify` from the form to go back to front-end only.
+
+## Custom domain
+
+The live site is **annealermusic.com**. In Netlify: Domain management → Add a domain →
+`annealermusic.com`. If the domain was bought through Netlify, DNS is set up automatically;
+if it was bought elsewhere, point it at Netlify (Netlify DNS nameservers, or the records Netlify
+shows). Netlify issues the HTTPS certificate and redirects `www` and `annealer.netlify.app` to it.
 
 ## Files
 
